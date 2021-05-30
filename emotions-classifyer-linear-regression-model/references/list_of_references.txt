@@ -1,0 +1,3 @@
+1. Kaggle Dataset			- https://www.kaggle.com/praveengovi/emotions-dataset-for-nlp
+2. Pytorch Dataset & DataLoaders	- https://pytorch.org/tutorials/beginner/basics/data_tutorial.html
+3. More to be added!

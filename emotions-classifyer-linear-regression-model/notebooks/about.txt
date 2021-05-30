@@ -1,0 +1,5 @@
+Descriptions of files in this folder:
+1. emotionsClassifyerDict.py 	- Word tokens and Class labels look-up tables construction and export to pickle file
+2. emotionsClassifyerDataset.py - Pytorch Dataset class defintions for file pre-processing, feature engineering and final (sample, label) iterable dataset creation
+3. emotionsClassifyerModel.py	- Pytorch nn.Module linear regression model class definitions
+4. emotionsClassifyerTrain.py	- Pytorch DataLoader classes, model training and validation.

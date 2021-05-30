@@ -1,0 +1,3 @@
+The subfolders consists of datasets in the below versions:
+1. Folder raw- train, test and validation dataset
+2. interim- word and emotions look-up dictionaries
