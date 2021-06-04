@@ -7,5 +7,5 @@ Taken from kaggle.com/ Refer the about.txt for information on license and Terms 
 Practise PyTorch with simple example datasets taken from kaggle.com and pytorch.org tutorials
 
 ## 3. List of Models:
-(a) Emotions Classifier- Linear Regression Model
-(b) DBPedia Classifier- Multi-Class Many to One LSTM classifier
+-(a) Emotions Classifier- Linear Regression Model
+-(b) DBPedia Classifier- Multi-Class Many to One LSTM classifier
