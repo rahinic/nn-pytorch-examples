@@ -54,14 +54,16 @@ print("----------------------------------------------------------------")
 ############################# 03. Optimizer and Loss  #################################
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') 
 optimizer = optim.Adam(model.parameters())
-criterion = nn.BCELoss()
+criterion = nn.CrossEntropyLoss()
 
 #define metric
 def binary_accuracy(preds, y):
     #round predictions to the closest integer
     rounded_preds = torch.round(preds)
     
-    correct = (rounded_preds == y).float() 
+    # correct = (rounded_preds == y).float() 
+    _,pred_label = torch.max(rounded_preds, dim = 1)
+    correct = (pred_label == y).float()
     acc = correct.sum() / len(correct)
     return acc
     
@@ -86,10 +88,15 @@ def train(model, dataset, optimizer, criterion):
        
        current_samples = sample
        current_labels = label
-
+       #print(current_samples)
        optimizer.zero_grad()
 
        predicted_labels = model(current_samples)
+
+    #    print(predicted_labels.size())
+    #    print(predicted_labels)
+    #    print(current_labels.size())
+    #    print(current_labels)
        
        loss = criterion(predicted_labels, current_labels)
        accuracy = binary_accuracy(predicted_labels, current_labels)
@@ -135,6 +142,8 @@ N_EPOCHS = 5
 best_valid_loss = float('inf')
 
 for epoch in range(N_EPOCHS):
+
+    print(epoch)
      
     #train the model
     train_loss, train_acc = train(model, train_dataset, optimizer, criterion)

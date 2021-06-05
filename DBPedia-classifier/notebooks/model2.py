@@ -24,23 +24,24 @@ class RNNDBPediaClassifier(nn.Module):
                             dropout=dropout,
                             batch_first=True)
 
-        self.fc = nn.Linear(hidden_dimension, output_dimension)
+        self.fc = nn.Linear(hidden_dimension*2, output_dimension)
 
-        self.activation_fn = nn.ReLU()
+        # self.activation_fn = nn.ReLU()
 
 
     def forward(self, sample):
+        # print(sample.size())
         embedded = self.embedding(sample)
-        print(embedded.size())
+        # print(embedded.size())
         output, (hidden, cell) = self.lstm(embedded)
 
         #concat the final forward and backward hidden state
         hidden = torch.cat((hidden[-2,:,:], hidden[-1,:,:]), dim = 1)
-        print(hidden.size())
+        # print(hidden.size())
 
         dense_output = self.fc(hidden)
 
         #Final activation function
-        outputs=self.act(dense_output)
+        # outputs=self.activation_fn(dense_output)
 
-        return outputs
+        return dense_output

@@ -28,14 +28,14 @@ class myDictionary:
         vocab_part2 = list(self.get_dataset(dataset2))
 
         total_vocab = vocab_part1 + vocab_part2
-        total_vocab_flat = [item for sublist in total_vocab for item in sublist]
+        total_vocab_flat1 = [item for sublist in total_vocab for item in sublist]
+        total_vocab_flat1.append('PAD')
+        total_vocab_flat = list(set(total_vocab_flat1))
 
         dict = {}
 
         for idx, word in enumerate(total_vocab_flat):
             dict[word] = idx
-
-        dict['pad']=0
 
         return dict
 
