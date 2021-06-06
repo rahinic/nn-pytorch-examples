@@ -7,8 +7,9 @@ import pickle
 import time
 from model2 import RNNDBPediaClassifier
 import torch.optim as optim
+from torchtext.data.utils import get_tokenizer
 
-file = open("C:/Users/rahin/projects/nn-pytorch-examples/DBPedia-classifier/data/interim/complete_word_dict.pkl", "rb")
+file = open("nn-pytorch-examples/DBPedia-classifier/data/interim/complete_word_dict.pkl", "rb")
 vocab = pickle.load(file)
 file.close()
 
@@ -53,7 +54,8 @@ print("----------------------------------------------------------------")
 ##########################################################################################
 ############################# 03. Optimizer and Loss  #################################
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') 
-optimizer = optim.Adam(model.parameters())
+# optimizer = optim.Adam(model.parameters())
+optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE)
 criterion = nn.CrossEntropyLoss()
 
 #define metric
@@ -93,10 +95,6 @@ def train(model, dataset, optimizer, criterion):
 
        predicted_labels = model(current_samples)
 
-    #    print(predicted_labels.size())
-    #    print(predicted_labels)
-    #    print(current_labels.size())
-    #    print(current_labels)
        
        loss = criterion(predicted_labels, current_labels)
        accuracy = binary_accuracy(predicted_labels, current_labels)
@@ -137,7 +135,7 @@ def evaluate(model, dataset, criterion):
     return epoch_loss/len(dataset), epoch_accuracy/len(dataset)
 
 ############################################################################################
-################################## 06. NN Model Eval #####################################
+################################## 06. NN Model training #####################################
 N_EPOCHS = 5
 best_valid_loss = float('inf')
 
@@ -156,5 +154,58 @@ for epoch in range(N_EPOCHS):
         best_valid_loss = valid_loss
         torch.save(model.state_dict(), 'saved_weights.pt')
     
+    print("-------------------------------------------------------------------")
     print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc*100:.2f}%')
     print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc*100:.2f}%')
+    print("-------------------------------------------------------------------")
+
+############################################################################################
+################################## 07. Model Predictions #####################################
+
+DBpedia_label = {0: 'Company',
+                1: 'EducationalInstitution',
+                2: 'Artist',
+                3: 'Athlete',
+                4: 'OfficeHolder',
+                5: 'MeanOfTransportation',
+                6: 'Building',
+                7: 'NaturalPlace',
+                8: 'Village',
+                9: 'Animal',
+                10: 'Plant',
+                11: 'Album',
+                12: 'Film',
+                13: 'WrittenWork'}
+
+
+def predict(text, model, vocab):
+
+    # line to tokens
+    tokenizer = get_tokenizer("basic_english")
+    tokens_in_line = tokenizer(text)
+
+    # padding sequence
+    for pad in range(0, 250-len(tokens_in_line)):
+                tokens_in_line.append('PAD') 
+
+    # padded tokens to idx look-up from vocabulary
+    tokens_to_idx = [vocab[tok] for tok in tokens_in_line]
+
+    # print(f"{tokens_in_line} \n {tokens_to_idx}")
+
+    # token idx to tensor conversion
+    idx_to_torch = torch.tensor(tokens_to_idx, dtype=torch.int64)
+    idx_to_torch = idx_to_torch.unsqueeze(1).T
+
+
+    with torch.no_grad():
+        output = model(idx_to_torch)
+        print(output)
+        print(output.argmax(1))
+        return output.argmax(1).item() 
+
+model = model.to("cpu")
+
+example = "sport news anyone?"
+
+print("This is a %s news" %DBpedia_label[predict(example, model, vocab)])

@@ -12,7 +12,7 @@ class DBPDataset(Dataset):
     def _load_dictionary(self):
         
         """create an obj to dictionary class and construct the dictionary"""
-        file = open("C:/Users/rahin/projects/nn-pytorch-examples/DBPedia-classifier/data/interim/complete_word_dict.pkl", "rb")
+        file = open("nn-pytorch-examples/DBPedia-classifier/data/interim/complete_word_dict.pkl", "rb")
         dict_content = pickle.load(file)
         file.close()
 

@@ -41,7 +41,7 @@ class RNNDBPediaClassifier(nn.Module):
 
         dense_output = self.fc(hidden)
 
-        #Final activation function
+        #activation function
         # outputs=self.activation_fn(dense_output)
 
         return dense_output
